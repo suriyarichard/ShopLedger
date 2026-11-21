@@ -5,6 +5,12 @@ var orders = require('../lib/orders');
 
 function product(overrides) { return Object.assign({ id: 1, name: 'Test product', stock: 1, reserved: 0 }, overrides); }
 
+test('repeated lines share the available stock for their product', function () {
+  var items = [{id:1,qty:1},{id:1,qty:1}];
+  assert.equal(inventory.check([product()], items).ok, false);
+  assert.equal(inventory.check([product({stock:2})], items).ok, true);
+});
+
 test('inventory accepts an order for exactly one sellable unit', function () {
   assert.deepEqual(inventory.check([product()], [{ id: 1, qty: 1 }]), { ok: true });
 });
